@@ -91,7 +91,7 @@ export default class Form extends Component {
               value={ cardImage }
               onChange={ onInputChange }
               id="imgInput"
-              name="cardImg"
+              name="cardImage"
             />
           </label>
 
