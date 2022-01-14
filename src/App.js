@@ -16,6 +16,7 @@ class App extends React.Component {
       cardRare: '',
       cardTrunfo: false,
       isSaveButtonDisabled: true,
+      savedCards: [],
     };
   }
 
@@ -62,6 +63,23 @@ class App extends React.Component {
 
     const checkButton = (isInputFilled && validateAtt && validSum);
     this.setState({ isSaveButtonDisabled: !checkButton });
+  };
+
+  onSaveButtonClick = () => {
+    const newCard = this.state;
+
+    this.setState((previous) => ({
+      cardName: '',
+      cardDescription: '',
+      cardAttr1: 0,
+      cardAttr2: 0,
+      cardAttr3: 0,
+      cardImage: '',
+      cardRare: 'normal',
+      cardTrunfo: false,
+      isSaveButtonDisabled: true,
+      savedCards: [...previous.savedCards, newCard],
+    }));
   }
 
   render() {
@@ -91,6 +109,7 @@ class App extends React.Component {
           cardTrunfo={ cardTrunfo }
           onInputChange={ this.onInputChange }
           isSaveButtonDisabled={ isSaveButtonDisabled }
+          onSaveButtonClick={ this.onSaveButtonClick }
         />
 
         <Card
