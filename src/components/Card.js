@@ -12,6 +12,8 @@ export default class Card extends Component {
       cardImage,
       cardRare,
       cardTrunfo,
+      removeButton,
+      showButton,
     } = this.props;
 
     return (
@@ -28,6 +30,17 @@ export default class Card extends Component {
           <span data-testid="rare-card">{ cardRare }</span>
           { cardTrunfo ? <span data-testid="trunfo-card">Super Trunfo</span> : null }
         </div>
+        {
+          showButton
+        && (
+          <button
+            data-testid="delete-button"
+            type="button"
+            onClick={ removeButton }
+          >
+            Excluir
+          </button>)
+        }
       </section>
     );
   }
@@ -42,4 +55,6 @@ Card.propTypes = {
   cardImage: PropTypes.string,
   cardRare: PropTypes.string,
   cardTrunfo: PropTypes.bool,
+  removeButton: PropTypes.func,
+  showButton: PropTypes.bool,
 }.isRequired;
