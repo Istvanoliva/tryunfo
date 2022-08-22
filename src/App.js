@@ -3,7 +3,7 @@ import Card from './components/Card';
 import Filters from './components/Filters';
 import Form from './components/Form';
 
-class App extends React.Component {
+export default class App extends React.Component {
   constructor() {
     super();
 
@@ -19,7 +19,11 @@ class App extends React.Component {
       isSaveButtonDisabled: true,
       savedCards: [],
       hasTrunfo: false,
-      filterName: '',
+      searchValues: {
+        name: '',
+        rarity: '',
+        trunfo: false,
+      },
     };
   }
 
@@ -30,6 +34,23 @@ class App extends React.Component {
       [name]: value,
     }, this.buttonValidation);
   };
+
+  handleSearch = ({ target }) => {
+    if (target.type === 'checkbox') {
+      this.setState((prevState) => ({ searchValues: {
+        name: '',
+        rarity: '',
+        trunfo: prevState.searchValues.trunfo,
+      } }));
+    }
+
+    const value = target.name === 'rarity' && target.value === 'todas'
+      ? '' : target.value;
+
+    this.setState((prevState) => ({
+      searchValues: { ...prevState.searchValues, [target.name]: value },
+    }));
+  }
 
   buttonValidation = () => {
     const { cardName, cardDescription, cardAttr1,
@@ -82,12 +103,27 @@ class App extends React.Component {
     }));
   }
 
-  render() {
-    const { savedCards, filterName } = this.state;
+  setFilterCard = () => {
+    const { savedCards, searchValues: { name, rarity, trunfo } } = this.state;
 
-    const namesFiltereds = filterName.length
-      ? savedCards.filter((card) => card.cardName.includes(filterName))
-      : savedCards;
+    if (trunfo) return savedCards.filter((card) => card.cardTrunfo);
+
+    if (rarity) {
+      savedCards.filter((card) => card.cardName.includes(name)
+      && card.cardRare === 'rarity');
+    }
+    return savedCards.filter((card) => card.cardName.includes(name));
+  }
+
+  render() {
+    // const { savedCards, searchValues: { name, rarity } } = this.state;
+
+    // const searchFilters = rarity ? savedCards.filter((card) => (
+    //   card.cardName.includes(name) && card.cardRare === rarity
+    // ))
+    //   : savedCards.filter((card) => (
+    //     card.cardName.includes(name)
+    //   ));
 
     return (
       <div>
@@ -103,7 +139,7 @@ class App extends React.Component {
           showButton={ false }
         />
 
-        {namesFiltereds.map((card) => (
+        {this.setFilterCard.map((card) => (
           <div key={ card.cardName }>
             <Card
               { ...card }
@@ -115,13 +151,10 @@ class App extends React.Component {
 
         <Filters
           { ...this.state }
-          onInputChange={ this.onInputChange }
-          filterByName={ this.filterByName }
+          handleSearch={ this.handleSearch }
         />
 
       </div>
     );
   }
 }
-
-export default App;
